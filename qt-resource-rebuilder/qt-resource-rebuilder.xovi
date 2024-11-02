@@ -1,0 +1,20 @@
+version     0.1.0
+
+file        src/main.c
+override    _Z21qRegisterResourceDataiPKhS0_S0_
+import      _Z21qRegisterResourceDataiPKhS0_S0_
+
+file        src/indexfile.c
+import      fopen
+
+file        src/hash.c
+
+copy        src/hash.h
+copy        src/uthash.h
+copy        src/utlist.h
+copy        src/indexfile.h
+copy        src/types.h
+
+make        src/main.c
+make        src/hash.c
+make        src/indexfile.c
