@@ -29,6 +29,6 @@ struct FilemanOverride {
 };
 
 extern void fileman$registerOverride(struct FilemanOverride *override);
-extern int fopenToOpenFlags(const char *mode);
-extern int anyFlagsToSyscall(const char *mode, int flags, int iMode);
-extern int anyFlagsToSimple(const char *mode, int flags, int iMode);
+extern int fileman$fopenToOpenFlags(const char *mode);
+extern int fileman$anyFlagsToSyscall(const char *mode, int flags, int iMode);
+extern int fileman$anyFlagsToSimple(const char *mode, int flags, int iMode);
