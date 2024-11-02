@@ -114,7 +114,7 @@ int override$open(const char *filePath, int flags, int mode) {
 }
 
 // EXPORT:
-void registerOverride(struct FilemanOverride *entry){
+void registerOverride(struct FilemanOverride *entry) {
     LL_APPEND(ENTRIES, entry);
 }
 

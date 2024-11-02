@@ -23,7 +23,7 @@ int fopenToOpenFlags(const char *mode) {
 }
 
 // EXPORT:
-int anyFlagsToSyscall(const char *mode, int flags, int iMode){
+int anyFlagsToSyscall(const char *mode, int flags, int iMode) {
     if(mode != NULL && flags == 0 && iMode == 0){
         return fopenToOpenFlags(mode);
     } else if(flags != 0){
@@ -33,7 +33,7 @@ int anyFlagsToSyscall(const char *mode, int flags, int iMode){
 }
 
 // EXPORT:
-int anyFlagsToSimple(const char *mode, int flags, int iMode){
+int anyFlagsToSimple(const char *mode, int flags, int iMode) {
     int syscallFlags = anyFlagsToSimple(mode, flags, iMode);
     if(syscallFlags == -1) {
         return FILEMAN_SIMPLE_ILLEGAL;
