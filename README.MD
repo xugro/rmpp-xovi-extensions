@@ -13,4 +13,5 @@ parent of all temporary build directories.
 
 - [fileman](fileman/) - A module for managing filesystem redirections
 - [random-suspend-screen](random-suspend-screen) - Lets you randomize your rM tablet's suspend screens
+- [palm-rejection](palm-rejection) - Disables the touchscreen whenever the marker is undocked
 - [qt-command-executor](qt-command-executor) - Injects a QT module, which makes it possible to execute shell commands from QML.
