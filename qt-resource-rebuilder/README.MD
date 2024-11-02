@@ -21,5 +21,6 @@ Note: Both absolute and relative paths are supported (relative paths' base is `$
 
 Note: By default, `$XOVI_EXTHOME` is `/home/root/xovi`
 
+### Please remember to clear your qmlcache directory after creating / deleting qrr files, to make sure no cached versions are loaded
 
 ### As of right now it is not yet possible to inject new files!
