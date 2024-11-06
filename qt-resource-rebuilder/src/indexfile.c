@@ -5,6 +5,8 @@
 #include <string.h>
 #include <stdio.h>
 #include "../../system.h"
+#include "../../util.h"
+
 #define MAX_LINE_LENGTH     1024
 #define MAX_FILENAME_LENGTH 1024
 
@@ -15,7 +17,7 @@ REQUIRE_ENVIRONMENT;
     size_t len2 = strlen(str2);                                             \
     size_t delim_len = 1;                                                   \
     if (len1 + len2 + delim_len >= (MAX_FILENAME_LENGTH)) {                 \
-        printf("[%s]: Error: Concatenated string exceeds max length\n");    \
+        LOG("[%s]: Error: Concatenated string exceeds max length\n", NAME); \
         result[0] = '\0';                                                   \
     } else {                                                                \
         snprintf(result, MAX_FILENAME_LENGTH, "%s%c%s", str1, delim, str2); \
@@ -38,7 +40,7 @@ static inline void defineReplacement(struct ModificationDefinition **definitions
     struct ModificationDefinition *existing = NULL;
     HASH_FIND_HT(*definitions, &hash, existing);
     if(existing) {
-        printf("[%s]: Error: %s has already been overwritten! Cannot overlay again!\n", NAME, qmlPath);
+        LOG("[%s]: Error: %s has already been overwritten! Cannot overlay again!\n", NAME, qmlPath);
         return;
     }
 
@@ -52,26 +54,26 @@ static inline void defineReplacement(struct ModificationDefinition **definitions
 
     struct stat statStruct;
     if(stat(fileName, &statStruct) == -1){
-        printf("[%s]: Cannot stat file %s\n", NAME, fileName);
+        LOG("[%s]: Cannot stat file %s\n", NAME, fileName);
         return;
     }
     size_t size = statStruct.st_size;
     if(size > UINT32_MAX) {
         // I doubt anyone will ever see this message.
-        printf("[%s]: File %s is too large. Will be truncated.\n", NAME, fileName);
+        LOG("[%s]: File %s is too large. Will be truncated.\n", NAME, fileName);
         size = UINT32_MAX;
     }
-    printf("[%s]: Loading file %s (%lld bytes)\n", NAME, fileName, size);
+    LOG("[%s]: Loading file %s (%lld bytes)\n", NAME, fileName, size);
 
     char *fileContents = malloc(size);
     if(!fileContents) {
-        printf("[%s]: Failed to malloc()!\n", NAME);
+        LOG("[%s]: Failed to malloc()!\n", NAME);
         return;
     }
 
     FILE *file = $fopen(fileName, "r");
     if (file == NULL) {
-        printf("[%s]: Error opening file %s\n", NAME, fileName);
+        LOG("[%s]: Error opening file %s\n", NAME, fileName);
         return;
     }
 
@@ -88,13 +90,13 @@ static inline void defineReplacement(struct ModificationDefinition **definitions
     repl->node = 0;
     repl->size = size;
     HASH_ADD_HT(*definitions, entryNameHash, mod);
-    printf("[%s]: Defined a replacement for %s [%llu] (%s) successfully!\n", NAME, qmlPath, hash, fileName);
+    LOG("[%s]: Defined a replacement for %s [%llu] (%s) successfully!\n", NAME, qmlPath, hash, fileName);
 }
 
 static void loadAllFromFile(char *fileName, struct ModificationDefinition **definitions, const char *extensionRootDir){
     FILE *file = $fopen(fileName, "r");
     if (file == NULL) {
-        printf("[%s]: Error opening file %s\n", NAME, fileName);
+        LOG("[%s]: Error opening file %s\n", NAME, fileName);
         return;
     }
     char line[MAX_LINE_LENGTH];
@@ -114,11 +116,11 @@ static void loadAllFromFile(char *fileName, struct ModificationDefinition **defi
                     defineReplacement(definitions, qmlPath, realPath, extensionRootDir);
                     break;
                 default:
-                    printf("[%s]: Unimplemented action: %c! - skipping line %s\n", NAME, type, line);
+                    LOG("[%s]: Unimplemented action: %c! - skipping line %s\n", NAME, type, line);
                     break;
             }
         } else {
-            printf("[%s]: Line format invalid: %s\n", NAME, line);
+            LOG("[%s]: Line format invalid: %s\n", NAME, line);
         }
     }
 
@@ -131,20 +133,20 @@ void loadAllModifications(struct ModificationDefinition **definitions) {
     struct dirent *entry;
     int n = 0;
     char fileName[MAX_FILENAME_LENGTH];
-    printf("[%s]: Locating resources to load...\n", NAME);
+    LOG("[%s]: Locating resources to load...\n", NAME);
     if(!extHome) {
-        printf("[%s]: Extension home directory (%s) not found. Bailing.\n", NAME, extensionRootDir);
+        LOG("[%s]: Extension home directory (%s) not found. Bailing.\n", NAME, extensionRootDir);
         return;
     }
     while((entry = readdir(extHome)) != NULL) {
         if(entry->d_type == DT_REG && endsWith(entry->d_name, ".qrr") == 0){
             CONCAT_STRINGS_WITH_DELIM(fileName, extensionRootDir, entry->d_name, '/');
-            printf("[%s]: Reading %s\n", NAME, fileName);
+            LOG("[%s]: Reading %s\n", NAME, fileName);
             loadAllFromFile(fileName, definitions, extensionRootDir);
             ++n;
         }
     }
     closedir(extHome);
     free(extensionRootDir);
-    printf("[%s]: Loaded %d resource rebuild files.\n", NAME, n);
+    LOG("[%s]: Loaded %d resource rebuild files.\n", NAME, n);
 }

@@ -11,6 +11,7 @@
 #include <pthread.h>
 #include "types.h"
 #include "indexfile.h"
+#include "../../util.h"
 
 /*
     ModificationDefinition are raw structures that come from the modification files
@@ -96,7 +97,7 @@ void nameOfChild(struct ResourceRoot *root, int node, int *size, char *buffer, i
 }
 
 void testWriteToFile(const char *fname, struct ResourceRoot *root) {
-    printf("Writing to file %s\n", fname);
+    LOG("Writing to file %s\n", fname);
     int actualDataOffset = 4 + 16 + 4;
     int fd = open(fname, O_RDWR | O_CREAT);
     write(fd, "qres", 4);
@@ -163,7 +164,7 @@ void processNode(struct ResourceRoot *root, int node, const char *rootName) {
         struct ModificationDefinition *definitionToApply = NULL;
         HASH_FIND_HT(DEFINITIONS, &fileHash, definitionToApply);
         if(definitionToApply) {
-            printf("[%s]: NOT YET IMPLEMENTED\n", NAME);
+            LOG("[%s]: NOT YET IMPLEMENTED\n", NAME);
         }
         for(int child = childOffset; child < childOffset + childCount; child++){
             processNode(root, child, tempRoot);
@@ -171,7 +172,7 @@ void processNode(struct ResourceRoot *root, int node, const char *rootName) {
         free(tempRoot);
     } else {
         hash_t fileHash = hashStringS(nameBuffer, hashString((char*) rootName)); // Equal to hash on concat
-        printf("[%s]: Processing node %d: %s%s [%llu]\n", NAME, node, rootName, nameBuffer, fileHash);
+        LOG("[%s]: Processing node %d: %s%s [%llu]\n", NAME, node, rootName, nameBuffer, fileHash);
         struct ModificationDefinition *definitionToApply = NULL;
         HASH_FIND_HT(DEFINITIONS, &fileHash, definitionToApply);
         if(definitionToApply) {
@@ -189,9 +190,9 @@ void processNode(struct ResourceRoot *root, int node, const char *rootName) {
                 root->entriesAffected++;
                 root->dataSize += newEntry->size + 4;
                 HASH_ADD_INT(REPLACEMENT_ENTRIES, node, newEntry);
-                printf("[%s]: Marked for replacement - %s%s\n", NAME, rootName, nameBuffer);
+                LOG("[%s]: Marked for replacement - %s%s\n", NAME, rootName, nameBuffer);
             } else {
-                printf("[%s]: Invalid mode - should be set to REPLACE\n", NAME);
+                LOG("[%s]: Invalid mode - should be set to REPLACE\n", NAME);
             }
         }
     }
@@ -220,7 +221,7 @@ struct TempFileReference testGetFromFile(const char *filename){
     struct stat stat_temp;
     fstat(fd, &stat_temp);
     char *addr = mmap(NULL, stat_temp.st_size, PROT_READ, MAP_FILE | MAP_PRIVATE, fd, 0);
-    printf("MMAP'd to address %p (FD %d)\n", addr, fd);
+    LOG("MMAP'd to address %p (FD %d)\n", addr, fd);
     uint32_t treeOffset = readUInt32(addr, 8),
              dataOffset = readUInt32(addr, 12),
              nameOffset = readUInt32(addr, 16);
@@ -244,7 +245,7 @@ struct TempFileReference testGetFromFile(const char *filename){
 
 int override$_Z21qRegisterResourceDataiPKhS0_S0_(int version, uint8_t *tree, uint8_t *name, uint8_t *data) {
     pthread_mutex_lock(&mainMutex);
-    printf("[%s]: Asked to add %d %p %p %p to QT resource root.\n", NAME, version, tree, name, data);
+    LOG("[%s]: Asked to add %d %p %p %p to QT resource root.\n", NAME, version, tree, name, data);
     struct ResourceRoot resource = {
         .data = data,
         .name = name,
@@ -263,11 +264,11 @@ int override$_Z21qRegisterResourceDataiPKhS0_S0_(int version, uint8_t *tree, uin
     memcpy(resource.tree, tree, resource.treeSize);
 
     processNode(&resource, 0, "");
-    printf("[%s]: Processing done!\n", NAME);
+    LOG("[%s]: Processing done!\n", NAME);
 
     // Did we alter anything?
     if(resource.entriesAffected) {
-        printf("[%s]: Rebuilding data tables...\n", NAME);
+        LOG("[%s]: Rebuilding data tables...\n", NAME);
         // Yes - good. Rebuild the data table, and use the affected variables instead.
         applyDataTableChanges(&resource);
         tree = resource.tree;
@@ -279,7 +280,7 @@ int override$_Z21qRegisterResourceDataiPKhS0_S0_(int version, uint8_t *tree, uin
     }
 
     // Invoke the original code
-    printf("[%s]: Invoking with %d %p %p %p.\n", NAME, version, tree, name, data);
+    LOG("[%s]: Invoking with %d %p %p %p.\n", NAME, version, tree, name, data);
     int status = $_Z21qRegisterResourceDataiPKhS0_S0_(version, tree, name, data);
     pthread_mutex_unlock(&mainMutex);
     return status;
@@ -294,7 +295,7 @@ char _xovi_shouldLoad() {
     // Only attach self to GUI applications
     void *resFunc = dlsym(RTLD_DEFAULT, "_Z21qRegisterResourceDataiPKhS0_S0_");
     if(resFunc == NULL) {
-        printf("[%s]: Not a GUI application. Refusing to load.\n", NAME);
+        LOG("[%s]: Not a GUI application. Refusing to load.\n", NAME);
         return 0;
     }
     return 1;

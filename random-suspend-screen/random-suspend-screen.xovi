@@ -4,5 +4,6 @@ import      fileman$registerOverride
 
 file        src/main.c
 copy        ../system.h
+copy        ../util.h
 copy        ../fileman/src/fileman.h
 make        src/main.c

@@ -11,5 +11,6 @@ make        src/Main.c
 make        src/HalManager.c
 make        src/TouchPipe.c
 copy        ../system.h
+copy        ../util.h
 copy        ../fileman/src/fileman.h
 copy        src/files.h

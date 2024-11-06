@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <time.h>
 #include "../../system.h"
+#include "../../util.h"
 #include "../../fileman/src/fileman.h"
 
 #define NAME "random-suspend-screen"
@@ -19,7 +20,7 @@ const char *nameRemap(const char *_name, const char *_mode){
     DIR *suspendRoot;
 
     suspendRoot = opendir(ENV_ROOT);
-    printf("[%s]: Counting loadable files...\n", NAME);
+    LOG("[%s]: Counting loadable files...\n", NAME);
     while((entry = readdir(suspendRoot)) != NULL) {
         if(entry->d_type == DT_REG){
             fileCount++;
@@ -29,10 +30,10 @@ const char *nameRemap(const char *_name, const char *_mode){
 
     fileIndex = rand() % fileCount;
     if(fileCount == 0) {
-        printf("[%s]: Found no files, opening original file.\n", NAME);
+        LOG("[%s]: Found no files, opening original file.\n", NAME);
         return _name;
     }
-    printf("[%s]: Found %d files, opening file #%d.\n", NAME, fileCount, fileIndex);
+    LOG("[%s]: Found %d files, opening file #%d.\n", NAME, fileCount, fileIndex);
 
     suspendRoot = opendir(ENV_ROOT);
     while((entry = readdir(suspendRoot)) != NULL) {
@@ -58,7 +59,7 @@ void _xovi_construct(){
     // If this directory does not exist, do not load anything.
     DIR *suspendRoot = opendir(ENV_ROOT);
     if(suspendRoot == NULL){
-        printf("[%s]: No %s enviroment directory. Bailing.\n", NAME, NAME);
+        LOG("[%s]: No %s enviroment directory. Bailing.\n", NAME, NAME);
         return;
     }
     closedir(suspendRoot);
@@ -67,7 +68,7 @@ void _xovi_construct(){
     filenameBuffer = malloc(rootNameLength + 255);
     memcpy(filenameBuffer, ENV_ROOT, rootNameLength);
 
-    printf("[%s]: Loaded.\n", NAME);
+    LOG("[%s]: Loaded.\n", NAME);
 
     struct FilemanOverride *foverride = malloc(sizeof(struct FilemanOverride));
     foverride->handlerType = FILEMAN_HANDLE_NAME_MAP;

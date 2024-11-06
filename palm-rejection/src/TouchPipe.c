@@ -6,6 +6,7 @@
 #include <linux/input.h>
 #include "../../fileman/src/fileman.h"
 #include "files.h"
+#include "../../util.h"
 
 extern volatile bool touchScreenDisabled;
 extern volatile bool running;
@@ -19,16 +20,16 @@ struct FdContext {
 static void *_thread(void *data){
     int touchScreen = $open(TOUCHSCREEN, O_RDONLY);
     if(touchScreen == -1) {
-        printf("[PalmRejection -> Touch]: Failed to open " TOUCHSCREEN " (touchscreen).\n");
+        LOG("[PalmRejection -> Touch]: Failed to open " TOUCHSCREEN " (touchscreen).\n");
         return NULL;
     }
 
     struct FdContext *ctx = data;
-    printf("[PalmRejection -> Touch]: Sleeping for 10 seconds...\n");
+    LOG("[PalmRejection -> Touch]: Sleeping for 10 seconds...\n");
     sleep(10);
-    printf("[PalmRejection -> Touch]: Woke up!\n");
+    LOG("[PalmRejection -> Touch]: Woke up!\n");
     dup2(ctx->pipeReaderFD, ctx->realFD);
-    printf("[PalmRejection -> Touch]: Rugpulled the FD\n");
+    LOG("[PalmRejection -> Touch]: Rugpulled the FD\n");
     struct input_event readEvent;
     while(running) {
         read(touchScreen, &readEvent, sizeof(readEvent));
@@ -40,7 +41,7 @@ static void *_thread(void *data){
 }
 
 static int connectionStart(){
-    printf("[PalmRejection -> Touch]: Pipe started.");
+    LOG("[PalmRejection -> Touch]: Pipe started.");
     int pipes[2];
     pipe(pipes);
     // 0 - reader. 1 - writer
@@ -63,6 +64,6 @@ bool startTouchPipe(){
     fOverride->handlerType = FILEMAN_HANDLE_FD_MAP;
 
     fileman$registerOverride(fOverride);
-    printf("[PalmRejection -> Touch]: File registered.");
+    LOG("[PalmRejection -> Touch]: File registered.");
     return true;
 }

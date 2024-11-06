@@ -2,6 +2,7 @@
 
 #include "../../system.h"
 #include "../../fileman/src/fileman.h"
+#include "../../util.h"
 
 REQUIRE_ENVIRONMENT;
 
@@ -15,7 +16,7 @@ extern bool startHalManager();
 void _xovi_construct(){
     Environment->requireExtension("fileman", 0, 1, 0);
     if(!startHalManager()) {
-        printf("[PalmRejection]: Bailing!\n");
+        LOG("[PalmRejection]: Bailing!\n");
         return;
     }
     startTouchPipe();

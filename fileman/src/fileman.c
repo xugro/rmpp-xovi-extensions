@@ -4,6 +4,7 @@
 #include <pthread.h>
 #include "utlist.h"
 #include "fileman.h"
+#include "../../util.h"
 
 static struct FilemanOverride *ENTRIES;
 static pthread_mutex_t fopenMutex;
@@ -47,7 +48,7 @@ static struct FilemanOverride *findMatch(const char *filePath) {
                 break;
         }
         if(matched) {
-            printf("FILEMAN: Matched file %s\n", filePath);
+            LOG("FILEMAN: Matched file %s\n", filePath);
             return entry;
         }
     }
@@ -100,7 +101,7 @@ int override$open(const char *filePath, int flags, int mode) {
             result = (int) $open(entry->handler.fileNameRemap(filePath, NULL, flags, mode), flags, mode);
             break;
         case FILEMAN_HANDLE_FILE_MAP:
-            printf("ERROR: Cannot retrieve FILE*'s fd - pointer would be doomed.\n");
+            LOG("ERROR: Cannot retrieve FILE*'s fd - pointer would be doomed.\n");
             result = -1;
             break;
         case FILEMAN_HANDLE_FD_MAP:

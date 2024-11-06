@@ -14,6 +14,8 @@ file        src/utils.c
 
 copy        src/utlist.h
 copy        src/fileman.h
+copy        ../system.h
+copy        ../util.h
 
 make        src/fileman.c
 make        src/utils.c

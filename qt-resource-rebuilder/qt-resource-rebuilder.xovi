@@ -14,7 +14,9 @@ copy        src/uthash.h
 copy        src/utlist.h
 copy        src/indexfile.h
 copy        src/types.h
+
 copy        ../system.h
+copy        ../util.h
 
 make        src/main.c
 make        src/hash.c
