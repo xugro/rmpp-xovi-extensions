@@ -14,7 +14,7 @@ static const char *ENV_ROOT;
 static char *filenameBuffer;
 static int rootNameLength;
 
-const char *nameRemap(const char *_name, const char *_mode){
+const char *nameRemap(const char *_name, const char *_mode, int _1, int _2){
     int fileCount = 0, currentIndex = 0, fileIndex = 0;
     struct dirent *entry;
     DIR *suspendRoot;
