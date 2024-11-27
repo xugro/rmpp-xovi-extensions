@@ -1,6 +1,6 @@
-# Remarkable XOVI extensions
+# rMPP XOVI extensions
 
-This is a monorepo for all my XOVI extensions for the Remarkable Paper Pro tablet.
+This is a monorepo for all my XOVI extensions for the rMPP tablet.
 
 Note: I call extensions which themselves do not add functionality, but are a dependency for
 other extensions 'modules'
