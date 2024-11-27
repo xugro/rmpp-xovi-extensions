@@ -1,4 +1,6 @@
 #pragma once
+#include <stdbool.h>
+#include <pthread.h>
 #include "uthash.h"
 #include "hash.h"
 
@@ -23,6 +25,7 @@ struct ReplacementEntry {
     uint8_t *data;
     uint32_t size;
     uint32_t copyToOffset;
+    bool freeAfterwards;
 
     UT_hash_handle hh;
 };
@@ -38,7 +41,7 @@ struct InjectionEntryFile {
 struct InjectionEntry {
     int parentNode;
 
-    struct InjectionEntryFile *toInject;
+    struct InjectionEntryFile *toInjectHead;
 
     UT_hash_handle hh;
 };

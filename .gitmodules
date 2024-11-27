@@ -1,0 +1,3 @@
+[submodule "qt-resource-rebuilder/qmldiff"]
+	path = qt-resource-rebuilder/qmldiff
+	url = https://github.com/asivery/qmldiff

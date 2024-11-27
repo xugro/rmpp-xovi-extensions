@@ -11,6 +11,7 @@
 #include <pthread.h>
 #include "types.h"
 #include "indexfile.h"
+#include "qmldiff.h"
 #include "../../util.h"
 
 /*
@@ -142,6 +143,36 @@ void statArchive(struct ResourceRoot *root, int node) {
     root->originalDataSize = root->dataSize;
 }
 
+
+char qmldiffApplyChanges(const char *filename, void **data, uint32_t *size, uint16_t *flags, bool *freeAfterwards) {
+    char *temporary;
+    if (*flags == 4) {
+        // ZSTD.
+        size_t decompressedSize = $ZSTD_getFrameContentSize(*data, *size);
+        temporary = malloc(decompressedSize + 1);
+        $ZSTD_decompress(temporary, decompressedSize, *data, *size);
+        temporary[decompressedSize] = 0;
+    } else if(*flags == 0) {
+        temporary = malloc(*size + 1);
+        memcpy(temporary, *data, *size);
+        temporary[*size] = 0;
+    } else {
+        fprintf(stderr, "Cannot understand the format of %s - bailing.\n", filename);
+        return false;
+    }
+
+    char *processed = qmldiff_process_file(filename, temporary);
+    free(temporary);
+    if(processed == NULL) return false;
+
+    *data = processed;
+    *size = strlen(processed);
+    *freeAfterwards = true;
+    *flags = 0;
+
+    return true;
+}
+
 void processNode(struct ResourceRoot *root, int node, const char *rootName) {
     int offset = findOffset(node) + 4; // Skip name
     uint16_t flags = readUInt16(root->tree, offset);
@@ -194,6 +225,41 @@ void processNode(struct ResourceRoot *root, int node, const char *rootName) {
             } else {
                 LOG("[%s]: Invalid mode - should be set to REPLACE\n", NAME);
             }
+        } else {
+            // Check if any of the overrides has anything to say about this file.
+            int rootLen = strlen(rootName);
+            int nameLen = strlen(nameBuffer);
+            char *tempNameBuffer = malloc(rootLen + nameLen + 1);
+            memcpy(tempNameBuffer, rootName, rootLen);
+            memcpy(tempNameBuffer + rootLen, nameBuffer, nameLen);
+            tempNameBuffer[rootLen + nameLen] = 0;
+
+            if(qmldiff_is_modified(tempNameBuffer)) {
+                uint16_t flags = readUInt16(root->tree, offset - 2);
+                uint32_t offsetOfData = readUInt32(root->tree, offset + 4);
+                uint32_t dataSize = readUInt32(root->data, offsetOfData);
+                void *dataAddress = &root->data[offsetOfData + 4];
+                bool freeAfterwards = false;
+
+                if(qmldiffApplyChanges(tempNameBuffer, &dataAddress, &dataSize, &flags, &freeAfterwards)) {
+                    // The value's getting remapped. Create an update record and swap the values
+                    struct ReplacementEntry *newEntry = malloc(sizeof(struct ReplacementEntry));
+                    newEntry->node = node;
+                    newEntry->data = dataAddress;
+                    newEntry->size = dataSize;
+                    newEntry->copyToOffset = root->dataSize;
+                    newEntry->freeAfterwards = freeAfterwards;
+                    writeUint16(root->tree, offset - 2, flags);
+                    writeUint32(root->tree, offset + 4, newEntry->copyToOffset);
+
+                    root->entriesAffected++;
+                    root->dataSize += newEntry->size + 4;
+                    HASH_ADD_INT(REPLACEMENT_ENTRIES, node, newEntry);
+                    LOG("[%s]: Marked for replacement by external override - %s%s\n", NAME, rootName, nameBuffer);
+                }
+            }
+
+            free(tempNameBuffer);
         }
     }
 }
@@ -210,6 +276,9 @@ void applyDataTableChanges(struct ResourceRoot *root){
         writeUint32(itable, 0, s->size);
         memcpy(&root->data[s->copyToOffset], itable, 4);
         memcpy(&root->data[s->copyToOffset + 4], s->data, s->size);
+        if(s->freeAfterwards) {
+            free(s->data);
+        }
         next = s->hh.next;
         free(s);
     }
@@ -286,16 +355,28 @@ int override$_Z21qRegisterResourceDataiPKhS0_S0_(int version, uint8_t *tree, uin
     return status;
 }
 
+// Temporary mitigation for rust's `toml`
+double fmod(float a, float b){
+    int _a = a;
+    int _b = b;
+    return _a % _b;
+}
+
 void _xovi_construct(){
     pthread_mutex_init(&mainMutex, NULL);
     loadAllModifications(&DEFINITIONS);
+    char *temp = Environment->getExtensionDirectory(NAME);
+    qmldiff_build_change_files(temp);
+    free(temp);
+    // The function itself will decide if the thread needs to be started
+    qmldiff_start_saving_thread();
 }
 
 char _xovi_shouldLoad() {
     // Only attach self to GUI applications
-    void *resFunc = dlsym(RTLD_DEFAULT, "_Z21qRegisterResourceDataiPKhS0_S0_");
-    if(resFunc == NULL) {
-        LOG("[%s]: Not a GUI application. Refusing to load.\n", NAME);
+    void *a = dlsym(RTLD_DEFAULT, "_Z21qRegisterResourceDataiPKhS0_S0_");
+    void *b = dlsym(RTLD_DEFAULT, "ZSTD_decompress");
+    if(a == NULL || b == NULL) {
         return 0;
     }
     return 1;
