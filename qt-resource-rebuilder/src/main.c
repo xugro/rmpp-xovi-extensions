@@ -22,7 +22,6 @@
     If any of these fields contains a value, the structure will be traverse again,
     to stat() it. Then in the third and final traversal, the modifications will be applied.
 */
-
 static struct ReplacementEntry *REPLACEMENT_ENTRIES = NULL;
 static struct InjectionEntry *INJECTION_ENTRIES = NULL;
 
@@ -146,22 +145,25 @@ void statArchive(struct ResourceRoot *root, int node) {
 
 char qmldiffApplyChanges(const char *filename, void **data, uint32_t *size, uint16_t *flags, bool *freeAfterwards) {
     char *temporary;
+    uint32_t dataSize;
     if (*flags == 4) {
         // ZSTD.
         size_t decompressedSize = $ZSTD_getFrameContentSize(*data, *size);
         temporary = malloc(decompressedSize + 1);
         $ZSTD_decompress(temporary, decompressedSize, *data, *size);
         temporary[decompressedSize] = 0;
+        dataSize = decompressedSize;
     } else if(*flags == 0) {
         temporary = malloc(*size + 1);
         memcpy(temporary, *data, *size);
         temporary[*size] = 0;
+        dataSize = *size;
     } else {
         fprintf(stderr, "Cannot understand the format of %s - bailing.\n", filename);
         return false;
     }
 
-    char *processed = qmldiff_process_file(filename, temporary);
+    char *processed = qmldiff_process_file(filename, temporary, dataSize);
     free(temporary);
     if(processed == NULL) return false;
 
