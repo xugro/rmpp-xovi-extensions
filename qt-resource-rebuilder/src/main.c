@@ -214,6 +214,7 @@ void processNode(struct ResourceRoot *root, int node, const char *rootName) {
                 newEntry->node = node;
                 newEntry->data = definitionToApply->action.toReplace->data;
                 newEntry->size = definitionToApply->action.toReplace->size;
+                newEntry->freeAfterwards = false;
                 newEntry->copyToOffset = root->dataSize;
                 writeUint16(root->tree, offset - 2, 0);
                 writeUint32(root->tree, offset + 4, newEntry->copyToOffset);
