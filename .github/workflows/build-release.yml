@@ -1,0 +1,57 @@
+name: Build with RMPP Toolchain and Upload Releases
+
+on:
+    push:
+        tags:
+          - '*'
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        container:
+            image: eeems/remarkable-toolchain:latest-rmpp
+
+        steps:
+            - name: Checkout Code
+              uses: actions/checkout@v3
+              with:
+                submodules: true
+
+            - name: Build Application
+              run: |
+                mkdir ~/Tools
+                curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > install
+                sh install -y
+                . "$HOME/.cargo/env"
+                rustup target add aarch64-unknown-linux-gnu
+                apt-get update
+                apt-get install -y zip
+                ln -rs /opt/codex/ferrari/* ~/Tools/remarkable-toolchain
+                cd scripts
+                bash make_all
+                mkdir output
+                find ../ -iname "*.so" -exec mv "{}" "output/" \;
+                cd output
+                zip ../extensions.zip *
+
+            - name: Create Release
+              uses: actions/create-release@v1
+              id: create_release
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                draft: false
+                prerelease: false
+                release_name: ${{ github.event.release.tag_name }}
+                tag_name: ${{ github.ref }}
+
+            - name: Upload Release Asset
+              uses: actions/upload-release-asset@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+              with:
+                upload_url: ${{ steps.create_release.outputs.upload_url }}
+                asset_path: scripts/extensions.zip
+                asset_name: extensions.zip
+                asset_content_type: application/octet-stream
