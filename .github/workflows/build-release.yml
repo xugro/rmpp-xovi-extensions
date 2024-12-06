@@ -29,9 +29,7 @@ jobs:
                 apt-get install -y zip
                 ln -rs /opt/codex/ferrari/* ~/Tools/remarkable-toolchain
                 cd scripts
-                bash make_all
-                mkdir output
-                find ../ -iname "*.so" -exec mv "{}" "output/" \;
+                bash build_all.sh
                 cd output
                 zip ../extensions.zip *
 
