@@ -374,13 +374,3 @@ void _xovi_construct(){
     // The function itself will decide if the thread needs to be started
     qmldiff_start_saving_thread();
 }
-
-char _xovi_shouldLoad() {
-    // Only attach self to GUI applications
-    void *a = dlsym(RTLD_DEFAULT, "_Z21qRegisterResourceDataiPKhS0_S0_");
-    void *b = dlsym(RTLD_DEFAULT, "ZSTD_decompress");
-    if(a == NULL || b == NULL) {
-        return 0;
-    }
-    return 1;
-}
