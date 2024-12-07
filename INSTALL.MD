@@ -33,3 +33,18 @@ chmod a+x /home/root/xovi/{_start,start}
 - Before installing an extension, read its readme to make sure you also installed all of its dependencies. An extension without dependencies will either fail to load, or crash on startup.
 - Download an extension's `.so` file (in case of this repository, download the `extensions.zip` file, then unpack it to get all the currently available xovi extensions)
 - Run `xovi/start` to restart xovi
+
+# To update hashtab (required for UI mods)
+If your device updates, or you're installing qt-resource-rebuilder for the first time, be sure to update the hashtab file. To do that, issue the following commands:
+```
+mkdir -p /home/root/xovi/exthome/qt-resource-rebuilder
+rm -f /home/root/xovi/exthome/qt-resource-rebuilder/hashtab
+killall xochitl
+QMLDIFF_HASHTAB_CREATE=/home/root/xovi/exthome/qt-resource-rebuilder/hashtab xovi/_start
+```
+After that, you should start seeing logs scroll up your screen. Enter your passcode on the rM, then go into settings, and watch the logs. When you see the line:
+```
+[qmldiff]: Hashtab saved to /home/root/xovi/exthome/qt-resource-rebuilder/hashtab
+```
+scroll up your screen on the PC, press CTRL+C.
+After that, start xovi normally (`xovi/start`)
