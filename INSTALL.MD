@@ -1,6 +1,6 @@
 # Disclaimers and general info
 
-I am NOT responsible for any damages that you may incur to your device using my software. If you end up permanently bricking your device, or damaging the screen, you cannot expect me to fix it. I have written these extensions for myself, and sharing them in hopes that someone might also find them useful.
+I am NOT responsible for any damages that you may incur to your device using my software. If you end up permanently bricking your device, or damaging the screen, you cannot expect me to fix it. I have written these extensions for myself, and I'm sharing them in hopes that someone might also find them useful.
 
 You are installing this at your own risk.
 
@@ -34,7 +34,7 @@ chmod a+x /home/root/xovi/{_start,start}
 - Download an extension's `.so` file (in case of this repository, download the `extensions.zip` file, then unpack it to get all the currently available xovi extensions)
 - Run `xovi/start` to restart xovi
 
-# To update hashtab (required for UI mods)
+## To update hashtab (required for UI mods)
 If your device updates, or you're installing qt-resource-rebuilder for the first time, be sure to update the hashtab file. To do that, issue the following commands:
 ```
 mkdir -p /home/root/xovi/exthome/qt-resource-rebuilder
