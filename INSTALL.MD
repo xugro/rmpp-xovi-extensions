@@ -32,6 +32,7 @@ chmod a+x /home/root/xovi/{_start,start}
 ## To install extensions:
 - Before installing an extension, read its readme to make sure you also installed all of its dependencies. An extension without dependencies will either fail to load, or crash on startup.
 - Download an extension's `.so` file (in case of this repository, download the `extensions.zip` file, then unpack it to get all the currently available xovi extensions)
+- Copy the `.so` file to `/home/root/xovi/extensions.d/` on the tablet
 - Run `xovi/start` to restart xovi
 
 ## To update hashtab (required for UI mods)
