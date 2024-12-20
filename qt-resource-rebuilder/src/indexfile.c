@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include "../../system.h"
 #include "../../util.h"
+#include "rccload.h"
 
 #define MAX_LINE_LENGTH     1024
 #define MAX_FILENAME_LENGTH 1024
@@ -144,6 +145,10 @@ void loadAllModifications(struct ModificationDefinition **definitions) {
             LOG("[%s]: Reading %s\n", NAME, fileName);
             loadAllFromFile(fileName, definitions, extensionRootDir);
             ++n;
+        }
+        if(entry->d_type == DT_REG && endsWith(entry->d_name, ".rcc") == 0){
+            CONCAT_STRINGS_WITH_DELIM(fileName, extensionRootDir, entry->d_name, '/');
+            registerRCCFile(fileName);
         }
     }
     closedir(extHome);
