@@ -21,6 +21,8 @@ Note: Both absolute and relative paths are supported (relative paths' base is `$
 
 Note: By default, `$XOVI_EXTHOME` is `/home/root/xovi`
 
+QMLDiff and raw RCC files are also supported. They use the *.qmd / *.rcc extensions, and will also be loaded automatically
+
 P.S.:
 
 `QML_DISABLE_DISK_CACHE=1` is your friend
