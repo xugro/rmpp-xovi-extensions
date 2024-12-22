@@ -6,18 +6,18 @@
 
 REQUIRE_ENVIRONMENT;
 
-volatile bool touchScreenDisabled = false;
+volatile bool penInputDisabled = false;
 // TODO:
 volatile bool running = true;
 
-extern bool startTouchPipe();
+extern bool startMarkerPipe();
 extern bool startHalManager();
 
 void _xovi_construct(){
     Environment->requireExtension("fileman", 0, 1, 0);
     if(!startHalManager()) {
-        LOG("[PalmRejection]: Bailing!\n");
+        LOG("[PenRejection]: Bailing!\n");
         return;
     }
-    startTouchPipe();
+    startMarkerPipe();
 }
