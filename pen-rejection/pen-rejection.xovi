@@ -1,0 +1,16 @@
+import      fileman$registerOverride
+import      fileman$anyFlagsToSimple
+import      fopen
+import      open
+import      close
+
+file        src/Main.c
+file        src/HalManager.c
+file        src/MarkerPipe.c
+make        src/Main.c
+make        src/HalManager.c
+make        src/MarkerPipe.c
+copy        ../system.h
+copy        ../util.h
+copy        ../fileman/src/fileman.h
+copy        src/files.h
