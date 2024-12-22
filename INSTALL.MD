@@ -31,7 +31,7 @@ chmod a+x /home/root/xovi/{_start,start}
 
 mkdir -p /etc/systemd/system/xochitl.service.d
 
-cat <<"EOF" > /etc/systemd/system/xochitl.service.d/override.conf
+cat <<"EOF" > /etc/systemd/system/xochitl.service.d/xovi.conf
 [Service]
 Environment="QML_DISABLE_DISK_CACHE=1"
 Environment="LD_PRELOAD=/home/root/xovi/xovi.so"
@@ -53,7 +53,7 @@ If your device updates, or you're installing qt-resource-rebuilder for the first
 ```
 mkdir -p /home/root/xovi/exthome/qt-resource-rebuilder
 rm -f /home/root/xovi/exthome/qt-resource-rebuilder/hashtab
-QMLDIFF_HASHTAB_CREATE=/home/root/xovi/exthome/qt-resource-rebuilder/hashtab xovi/start
+QMLDIFF_HASHTAB_CREATE=/home/root/xovi/exthome/qt-resource-rebuilder/hashtab xovi/_start
 ```
 After that, you should start seeing logs scroll up your screen. Enter your passcode on the rM, then go into settings, and watch the logs. When you see the line:
 ```
