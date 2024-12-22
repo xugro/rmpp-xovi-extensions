@@ -8,6 +8,7 @@ XOVI is a tethered extension manager - after a restart, the tablet will get back
 
 ## To install XOVI:
 - Download [this](https://github.com/asivery/xovi/releases/latest/download/xovi.so) file
+- You need the `screen` binary on your device
 - Over SSH, create the following directory structure:
 ```
 /home/root
@@ -22,6 +23,12 @@ XOVI is a tethered extension manager - after a restart, the tablet will get back
 ```
 - Run the following commands (copy and paste into SSH shell):
 ```
+echo "#!/bin/bash" > /home/root/xovi/_start
+echo "#!/bin/bash" > /home/root/xovi/start
+echo "systemctl stop xochitl; killall xochitl 2>/dev/null; screen -dm bash -c '/home/root/xovi/_start'" >> /home/root/xovi/start
+echo "QML_DISABLE_DISK_CACHE=1 LD_PRELOAD=/home/root/xovi/xovi.so xochitl" >> /home/root/xovi/_start
+chmod a+x /home/root/xovi/{_start,start}
+
 mkdir -p /etc/systemd/system/xochitl.service.d
 
 cat <<"EOF" > /etc/systemd/system/xochitl.service.d/override.conf
@@ -32,7 +39,7 @@ EOF
 
 systemctl restart xochitl
 ```
-This will override the `xochitl` service to load `xovi.so` on startup.
+This will override the `xochitl` service to load `xovi.so` on startup, and also creates a `_start` and `start` file for easier debugging.
 
 ## To install extensions:
 - Before installing an extension, read its readme to make sure you also installed all of its dependencies. An extension without dependencies will either fail to load, or crash on startup.
@@ -45,9 +52,7 @@ If your device updates, or you're installing qt-resource-rebuilder for the first
 ```
 mkdir -p /home/root/xovi/exthome/qt-resource-rebuilder
 rm -f /home/root/xovi/exthome/qt-resource-rebuilder/hashtab
-systemctl stop xochitl
-killall xochitl
-QMLDIFF_HASHTAB_CREATE=/home/root/xovi/exthome/qt-resource-rebuilder/hashtab QML_DISABLE_DISK_CACHE=1 LD_PRELOAD=/home/root/xovi/xovi.so xochitl
+QMLDIFF_HASHTAB_CREATE=/home/root/xovi/exthome/qt-resource-rebuilder/hashtab xovi/start
 ```
 After that, you should start seeing logs scroll up your screen. Enter your passcode on the rM, then go into settings, and watch the logs. When you see the line:
 ```
