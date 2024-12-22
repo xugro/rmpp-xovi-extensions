@@ -37,6 +37,7 @@ Environment="QML_DISABLE_DISK_CACHE=1"
 Environment="LD_PRELOAD=/home/root/xovi/xovi.so"
 EOF
 
+systemctl daemon-reload
 systemctl restart xochitl
 ```
 This will override the `xochitl` service to load `xovi.so` on startup, and also creates a `_start` and `start` file for easier debugging.
