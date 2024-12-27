@@ -365,5 +365,6 @@ void _xovi_construct(){
     qmldiff_build_change_files(temp);
     free(temp);
     // The function itself will decide if the thread needs to be started
+    qmldiff_load_rules(r$hashtabRules);
     qmldiff_start_saving_thread();
 }
