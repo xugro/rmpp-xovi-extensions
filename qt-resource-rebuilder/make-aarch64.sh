@@ -1,6 +1,6 @@
 source ~/Tools/remarkable-toolchain/environment-setup-cortexa53-crypto-remarkable-linux
 cd qmldiff
-cargo build --target aarch64-unknown-linux-gnu --release
+cargo build --target aarch64-unknown-linux-gnu --release --lib
 cd ..
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
 NM=${SCRIPT_DIR##*/}
