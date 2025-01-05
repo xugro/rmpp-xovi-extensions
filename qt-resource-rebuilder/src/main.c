@@ -358,7 +358,21 @@ int override$_Z21qRegisterResourceDataiPKhS0_S0_(int version, uint8_t *tree, uin
     return status;
 }
 
+void fatalErrorAbortEverything(const char *error) {
+    fprintf(stderr, "[qt-resource-rebuilder]: Something terrible has happened. Please verify your setup. Error: %s\n", error);
+    fflush(stderr);
+    abort();
+}
+
 void _xovi_construct(){
+    const char *env = getenv("QML_DISABLE_DISK_CACHE");
+    if(env == NULL) {
+        fatalErrorAbortEverything("QML_DISABLE_DISK_CACHE is not set correctly");
+    }
+    if(strcmp("1", env) != 0) {
+        fatalErrorAbortEverything("QML_DISABLE_DISK_CACHE is not set correctly");
+    }
+
     pthread_mutex_init(&mainMutex, NULL);
     loadAllModifications(&DEFINITIONS);
     char *temp = Environment->getExtensionDirectory(NAME);
