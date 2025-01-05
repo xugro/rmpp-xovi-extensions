@@ -358,13 +358,6 @@ int override$_Z21qRegisterResourceDataiPKhS0_S0_(int version, uint8_t *tree, uin
     return status;
 }
 
-// Temporary mitigation for rust's `toml`
-double fmod(float a, float b){
-    int _a = a;
-    int _b = b;
-    return _a % _b;
-}
-
 void _xovi_construct(){
     pthread_mutex_init(&mainMutex, NULL);
     loadAllModifications(&DEFINITIONS);
@@ -372,5 +365,6 @@ void _xovi_construct(){
     qmldiff_build_change_files(temp);
     free(temp);
     // The function itself will decide if the thread needs to be started
+    qmldiff_load_rules(r$hashtabRules);
     qmldiff_start_saving_thread();
 }

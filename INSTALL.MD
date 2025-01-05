@@ -43,7 +43,7 @@ rm -f /home/root/xovi/exthome/qt-resource-rebuilder/hashtab
 killall xochitl
 QMLDIFF_HASHTAB_CREATE=/home/root/xovi/exthome/qt-resource-rebuilder/hashtab xovi/_start
 ```
-After that, you should start seeing logs scroll up your screen. Enter your passcode on the rM, then go into settings, and watch the logs. When you see the line:
+After that, you should start seeing logs scroll up your screen. Enter your passcode on the rM, then watch the logs. When you see the line:
 ```
 [qmldiff]: Hashtab saved to /home/root/xovi/exthome/qt-resource-rebuilder/hashtab
 ```
