@@ -32,5 +32,13 @@ public:
         QString output(outputDoc.toJson(QJsonDocument::Compact));
         return output;
     }
+    Q_INVOKABLE bool executeCommandDetached(const QString &command, const QStringList &arguments)
+    {
+        QProcessEnvironment env = QProcessEnvironment::systemEnvironment();
+        env.remove("LD_PRELOAD");
+        QProcess process;
+        process.setProcessEnvironment(env);
+        return process.startDetached(command, arguments);
+    }
 };
 
