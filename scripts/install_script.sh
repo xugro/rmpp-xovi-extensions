@@ -47,6 +47,9 @@ if pidof xochitl; then
   kill -15 \$(pidof xochitl)
 fi
 
+# make sure the resource-rebuilder folder exists.
+mkdir -p /home/root/xovi/exthome/qt-resource-rebuilder
+
 # remove the actual hashtable
 rm -f /home/root/xovi/exthome/qt-resource-rebuilder/hashtab
 
