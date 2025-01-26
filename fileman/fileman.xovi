@@ -1,6 +1,5 @@
 version     0.1.1
 
-file        src/fileman.c
 export      registerOverride
 export      fopenToOpenFlags
 export      anyFlagsToSyscall
@@ -9,13 +8,3 @@ override    fopen
 override    open
 import      fopen
 import      open
-
-file        src/utils.c
-
-copy        src/utlist.h
-copy        src/fileman.h
-copy        ../system.h
-copy        ../util.h
-
-make        src/fileman.c
-make        src/utils.c

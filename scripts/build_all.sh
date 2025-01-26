@@ -5,7 +5,8 @@ SCR_ROOT=$(pwd)
 export TMP=$SCR_ROOT/tmp/xovi-extensions
 export XOVI_REPO=/tmp/xovi
 mkdir -p $TMP
-git clone https://github.com/asivery/xovi /tmp/xovi
+mkdir -p "$XOVI_REPO/util"
+curl -o "$XOVI_REPO/util/xovigen.py" https://raw.githubusercontent.com/asivery/xovi/1edb3c9f0a31daec31b6931eb00f4f6ecc56d72b/util/xovigen.py
 
 for dir in ../*; do
     if [ -d $dir ] && [ $dir != "../scripts" ]; then
