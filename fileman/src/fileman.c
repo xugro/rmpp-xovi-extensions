@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <pthread.h>
-#include "xovi.h"
+#include "../xovi.h"
 #include "utlist.h"
 #include "fileman.h"
 #include "../../util.h"

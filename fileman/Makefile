@@ -1,6 +1,6 @@
-objects = fileman.o utils.h xovi.o
+objects = fileman.o utils.o xovi.o
 
-CC += -D_GNU_SOURCE
+CC += -D_GNU_SOURCE -fPIC
 VPATH = src
 
 fileman : $(objects)
@@ -12,3 +12,7 @@ xovi.c xovi.h	&: fileman.xovi
 
 fileman.o	: xovi.h utlist.h fileman.h ../util.h
 utils.o		: xovi.h fileman.h
+
+.PHONY  : clean
+clean :
+	rm fileman.so $(objects) xovi.c xovi.h

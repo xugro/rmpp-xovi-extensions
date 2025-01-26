@@ -1,4 +1,4 @@
-#include "xovi.h"
+#include "../xovi.h"
 #include "fileman.h"
 #include <fcntl.h>
 #include <string.h>
