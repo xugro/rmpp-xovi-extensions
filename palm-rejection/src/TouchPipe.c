@@ -7,6 +7,7 @@
 #include "../../fileman/src/fileman.h"
 #include "files.h"
 #include "../../util.h"
+#include "../xovi.h"
 
 extern volatile bool touchScreenDisabled;
 extern volatile bool running;
