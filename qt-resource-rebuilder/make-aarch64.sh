@@ -1,12 +1,2 @@
 source ~/Tools/remarkable-toolchain/environment-setup-cortexa53-crypto-remarkable-linux
 make
-# just for reference
-exit 0
-cd qmldiff
-cargo build --target aarch64-unknown-linux-gnu --release --lib
-cd ..
-SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
-NM=${SCRIPT_DIR##*/}
-python3 $XOVI_REPO/util/xovigen.py -c "aarch64-remarkable-linux-gcc -D_GNU_SOURCE --sysroot ~/Tools/remarkable-toolchain/sysroots/cortexa53-crypto-remarkable-linux -lQt6Core" -m -o $TMP/$NM $NM.xovi
-aarch64-remarkable-linux-g++ --sysroot ~/Tools/remarkable-toolchain/sysroots/cortexa53-crypto-remarkable-linux -I ~/Tools/remarkable-toolchain/sysroots/cortexa53-crypto-remarkable-linux/usr/include/QtCore/ -c $TMP/$NM/src/rccload.cpp -o $TMP/$NM/src/rccload.o
-bash $TMP/$NM/make.sh
