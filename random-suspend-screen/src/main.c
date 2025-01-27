@@ -5,6 +5,7 @@
 #include "../../system.h"
 #include "../../util.h"
 #include "../../fileman/src/fileman.h"
+#include "../xovi.h"
 
 #define NAME "random-suspend-screen"
 
