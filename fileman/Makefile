@@ -15,4 +15,4 @@ utils.o		: xovi.h fileman.h
 
 .PHONY  : clean
 clean :
-	rm fileman.so $(objects) xovi.c xovi.h
+	rm -f fileman.so $(objects) xovi.c xovi.h

@@ -22,4 +22,4 @@ indexfile.o	: xovi.h rccload.h ../util.h ../system.h
 
 .PHONY  : clean
 clean :
-	rm $(name).so $(objects) xovi.c xovi.h
+	rm -f $(name).so $(objects) xovi.c xovi.h

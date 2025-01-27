@@ -17,4 +17,4 @@ TouchPipe.o	: xovi.h files.h ../util.h
 
 .PHONY  : clean
 clean :
-	rm $(name).so $(objects) xovi.c xovi.h
+	rm -f $(name).so $(objects) xovi.c xovi.h
