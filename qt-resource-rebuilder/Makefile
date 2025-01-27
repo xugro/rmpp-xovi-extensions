@@ -1,5 +1,6 @@
-objects = main.o hash.o indexfile.o rccload.o xovi.o qmldiff.o
+objects = main.o hash.o indexfile.o rccload.o xovi.o libqmldiff.a
 
+CXX += -I ${SDKTARGETSYSROOT}/usr/include/QtCore/
 CC += -D_GNU_SOURCE -fPIC
 VPATH = src:qmldiff/target/aarch64-unknown-linux-gnu/release
 name = qt-resource-rebuilder
