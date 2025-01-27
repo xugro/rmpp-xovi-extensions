@@ -1,5 +1,7 @@
-exit 0
 source ~/Tools/remarkable-toolchain/environment-setup-cortexa53-crypto-remarkable-linux
+make
+# just for reference
+exit 0
 cd qmldiff
 cargo build --target aarch64-unknown-linux-gnu --release --lib
 cd ..
