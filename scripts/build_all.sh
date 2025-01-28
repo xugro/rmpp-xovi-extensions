@@ -9,7 +9,9 @@ mkdir -p "$XOVI_REPO/util"
 curl -o "$XOVI_REPO/util/xovigen.py" https://raw.githubusercontent.com/asivery/xovi/1edb3c9f0a31daec31b6931eb00f4f6ecc56d72b/util/xovigen.py
 
 
+#set environment variables to cross compile for the rMPP
 source ~/Tools/remarkable-toolchain/environment-setup-cortexa53-crypto-remarkable-linux
+export CARGO_BUILD_TARGET=aarch64-unknown-linux-gnu
 make -C ..
 
 
