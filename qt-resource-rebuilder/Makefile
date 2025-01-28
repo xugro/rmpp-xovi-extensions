@@ -23,3 +23,4 @@ indexfile.o	: xovi.h rccload.h ../util.h ../system.h
 .PHONY  : clean
 clean :
 	rm -f $(name).so $(objects) xovi.c xovi.h
+	cd qmldiff && cargo clean
