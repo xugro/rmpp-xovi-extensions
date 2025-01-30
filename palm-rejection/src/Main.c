@@ -3,6 +3,7 @@
 #include "../../system.h"
 #include "../../fileman/src/fileman.h"
 #include "../../util.h"
+#include "../xovi.h"
 
 REQUIRE_ENVIRONMENT;
 

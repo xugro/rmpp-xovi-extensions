@@ -7,6 +7,7 @@
 #include "../../system.h"
 #include "../../util.h"
 #include "rccload.h"
+#include "../xovi.h"
 
 #define MAX_LINE_LENGTH     1024
 #define MAX_FILENAME_LENGTH 1024
