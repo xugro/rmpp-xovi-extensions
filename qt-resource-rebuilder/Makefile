@@ -4,12 +4,17 @@ CXX += -I ${SDKTARGETSYSROOT}/usr/include/QtCore/ -fPIC
 CC += -D_GNU_SOURCE -fPIC
 VPATH = src
 name = qt-resource-rebuilder
+ifeq ($(OECORE_TARGET_ARCH), aarch64)
+CARGO_BUILD_TARGET=aarch64-unknown-linux-gnu
+else
+$(error Bad build target. Source the toolchain environment)
+endif
 
 fileman : $(objects)
 	${CC} ${CFLAGS} -shared -o $(name).so $(objects)
 
 libqmldiff.a	:
-	cd qmldiff && cargo build --release --lib
+	cd qmldiff && cargo build --release --lib --target $(CARGO_BUILD_TARGET)
 	cp qmldiff/target/${CARGO_BUILD_TARGET}/release/libqmldiff.a .
 
 xovi.c xovi.h	&: $(name).xovi

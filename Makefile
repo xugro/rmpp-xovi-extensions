@@ -14,4 +14,4 @@ $(qmakedirs)	:
 	cd $@ && qmake . && $(MAKE)
 
 clean-%	:
-	cd $* && $(MAKE) clean
+	cd $* && if [ -r Makefile ]; then $(MAKE) clean; fi
