@@ -63,4 +63,4 @@ jobs:
         needs: [release, build]
         steps:
             - name: Publish Draft Release
-              run: gh release edit ${{ github.ref }} --draft=false --verify-tags
+              run: gh release edit ${{ github.ref }} --draft=false --verify-tag
