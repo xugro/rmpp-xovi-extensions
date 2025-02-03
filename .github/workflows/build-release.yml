@@ -65,4 +65,5 @@ jobs:
             - name: Publish Draft Release
               env:
                 GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                GH_REPO: ${{ github.repository }}
               run: gh release edit $(basename "${{ github.ref }}") --draft=false --verify-tag
