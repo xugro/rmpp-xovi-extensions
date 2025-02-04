@@ -1,35 +1,12 @@
-version     0.2.0
+version 0.2.0
 
-file        src/main.c
-override    _Z21qRegisterResourceDataiPKhS0_S0_
-import?     _Z21qRegisterResourceDataiPKhS0_S0_
-import?     ZSTD_decompress
-import      ZSTD_getFrameContentSize
-resource    hashtabRules:rules.qrl
+override _Z21qRegisterResourceDataiPKhS0_S0_
+import? _Z21qRegisterResourceDataiPKhS0_S0_
+import? ZSTD_decompress
+import ZSTD_getFrameContentSize
+resource hashtabRules:rules.qrl
 
 ; Reach within qmldiff, and export
-export      qmldiff_add_external_diff
+export qmldiff_add_external_diff
 
-file        src/indexfile.c
-import      fopen
-
-file        src/hash.c
-
-copy        src/rccload.cpp
-copy        src/rccload.h
-make        src/rccload.o
-copy        src/hash.h
-copy        src/uthash.h
-copy        src/utlist.h
-copy        src/indexfile.h
-copy        src/types.h
-copy        src/qmldiff.h
-copy        qmldiff/target/aarch64-unknown-linux-gnu/release/libqmldiff.a
-
-copy        ../system.h
-copy        ../util.h
-
-make        src/main.c
-make        src/hash.c
-make        src/indexfile.c
-make        qmldiff/target/aarch64-unknown-linux-gnu/release/libqmldiff.a
+import fopen

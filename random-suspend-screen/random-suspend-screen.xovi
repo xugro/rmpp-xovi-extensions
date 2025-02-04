@@ -1,9 +1,3 @@
-version     0.1.0
+version 0.1.0
 
-import      fileman$registerOverride
-
-file        src/main.c
-copy        ../system.h
-copy        ../util.h
-copy        ../fileman/src/fileman.h
-make        src/main.c
+import fileman$registerOverride

@@ -13,6 +13,7 @@
 #include "indexfile.h"
 #include "qmldiff.h"
 #include "../../util.h"
+#include "../xovi.h"
 
 /*
     ModificationDefinition are raw structures that come from the modification files

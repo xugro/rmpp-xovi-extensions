@@ -5,6 +5,7 @@
 #include <linux/input.h>
 #include "files.h"
 #include "../../util.h"
+#include "../xovi.h"
 
 static FILE *halSensors = NULL;
 extern volatile bool touchScreenDisabled;
