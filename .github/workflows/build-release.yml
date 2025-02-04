@@ -26,6 +26,10 @@ jobs:
                 rustup target add aarch64-unknown-linux-gnu
                 apt-get update
                 apt-get install -y zip
+                export XOVI_REPO=/tmp/xovi
+                mkdir -p /tmp/xovi/util
+                curl -o "$XOVI_REPO/util/xovigen.py" https://raw.githubusercontent.com/asivery/xovi/refs/heads/master/util/xovigen.py
+                . /opt/codex/ferrari/*/environment-setup-cortexa53-crypto-remarkable-linux
                 make
                 mkdir output
                 find .. -iname "*.so" -not -path "**/release/deps/**" -exec cp -v {} output \;
