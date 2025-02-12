@@ -43,8 +43,7 @@ jobs:
                 apt-get update
                 apt-get install -y zip
                 export XOVI_REPO=/tmp/xovi
-                mkdir -p /tmp/xovi/util
-                curl -o "$XOVI_REPO/util/xovigen.py" https://raw.githubusercontent.com/asivery/xovi/refs/heads/master/util/xovigen.py
+                git clone https://github.com/asivery/xovi $XOVI_REPO
                 . /opt/codex/ferrari/*/environment-setup-cortexa53-crypto-remarkable-linux
                 make
                 mkdir output
@@ -83,8 +82,7 @@ jobs:
                 apt-get update
                 apt-get install -y zip
                 export XOVI_REPO=/tmp/xovi
-                mkdir -p /tmp/xovi/util
-                curl -o "$XOVI_REPO/util/xovigen.py" https://raw.githubusercontent.com/asivery/xovi/refs/heads/master/util/xovigen.py
+                git clone https://github.com/asivery/xovi $XOVI_REPO
                 . /opt/codex/rm2/*/environment-setup-cortexa7hf-neon-remarkable-linux-gnueabi
                 make qt-command-executor && make qt-resource-rebuilder
                 mkdir output
