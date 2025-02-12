@@ -59,7 +59,7 @@ jobs:
               with:
                 upload_url: ${{ needs.release.outputs.upload_url }}
                 asset_path: extensions.zip
-                asset_name: extensions_aarch64.zip
+                asset_name: extensions-rmpp.zip
                 asset_content_type: application/octet-stream
 
     build_armv7:
@@ -86,7 +86,7 @@ jobs:
                 mkdir -p /tmp/xovi/util
                 curl -o "$XOVI_REPO/util/xovigen.py" https://raw.githubusercontent.com/asivery/xovi/refs/heads/master/util/xovigen.py
                 . /opt/codex/rm2/*/environment-setup-cortexa7hf-neon-remarkable-linux-gnueabi
-                make
+                make qt-command-executor && make qt-resource-rebuilder
                 mkdir output
                 find .. -iname "*.so" -not -path "**/release/deps/**" -exec cp -v {} output \;
                 cd output
@@ -99,7 +99,7 @@ jobs:
               with:
                 upload_url: ${{ needs.release.outputs.upload_url }}
                 asset_path: extensions.zip
-                asset_name: extensions_armv7.zip
+                asset_name: extensions-beta-rm2.zip
                 asset_content_type: application/octet-stream
     publish:
         runs-on: ubuntu-latest
